@@ -11,7 +11,7 @@ namespace Geocodeonthefly.Application
         {
             var addresses = new List<Address>();
             
-            using (var reader = new StreamReader(path))
+            using (var reader = new StreamReader(path, Encoding.Default))
             {
                 //skip header
                 reader.ReadLine();
@@ -60,7 +60,7 @@ namespace Geocodeonthefly.Application
                     address.Lng));
             }
             
-            File.WriteAllText(destinationPath, csv.ToString());
+            File.WriteAllText(destinationPath, csv.ToString(), Encoding.Default);
         }
 
     }
