@@ -15,21 +15,11 @@ namespace Geocodeonthefly.Services
             _spreadsheet = new SpreadsheetApplication();
         }
 
-        public async Task<bool> GenerateGeocodes(string sourceCsvPath, string destinationCsvPath, char csvSeparator = ';')
+        public async void GenerateGeocodes(string sourceCsvPath, string destinationCsvPath, char csvSeparator = ';')
         {
-            try
-            {
-                var sourceAddresses = _spreadsheet.ReadFromCsv(sourceCsvPath, csvSeparator);
-                var destinationAddresses = await _gmaps.GetGeocodesAsync(sourceAddresses);
-                _spreadsheet.WriteCsv(destinationAddresses, destinationCsvPath, csvSeparator);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            
+            var sourceAddresses = _spreadsheet.ReadFromCsv(sourceCsvPath, csvSeparator);
+            var destinationAddresses = await _gmaps.GetGeocodesAsync(sourceAddresses);
+            _spreadsheet.WriteCsv(destinationAddresses, destinationCsvPath, csvSeparator);
         }
     }
 }

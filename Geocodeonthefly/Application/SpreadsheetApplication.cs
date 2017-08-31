@@ -33,6 +33,8 @@ namespace Geocodeonthefly.Application
 
                     if(!string.IsNullOrWhiteSpace(address.Street.Trim()))
                         addresses.Add(address);
+
+                    reader.ReadLine();
                 }
             }
 
