@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Geocodeonthefly.Domain;
@@ -13,7 +12,6 @@ namespace Geocodeonthefly.Application
 
         public async Task<ICollection<Address>> GetGeocodesAsync(ICollection<Address> addresses)
         {
-
             foreach (var address in addresses)
             {
                 // {street}, {number}, {neighborhood}, {city} - {state}, {postalCode}, {country}
@@ -35,13 +33,15 @@ namespace Geocodeonthefly.Application
                     var content = await request.Content.ReadAsStringAsync();
                     dynamic jsonResponse = JsonConvert.DeserializeObject<dynamic>(content);
 
-                    if (!Object.ReferenceEquals(null, jsonResponse.results[0]) &&
-                        !Object.ReferenceEquals(null, jsonResponse.results[0].geometry) &&
-                        !Object.ReferenceEquals(null, jsonResponse.results.geometry.location))
+                    try
                     {
                         address.Lat = jsonResponse.results[0].geometry.location.lat;
                         address.Lng = jsonResponse.results[0].geometry.location.lng;
-                    }
+                    } catch
+                    {
+                        
+                    };
+                    
 
                 }
             }
