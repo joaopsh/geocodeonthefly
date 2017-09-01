@@ -28,7 +28,7 @@ namespace Geocodeonthefly
         {
             if (browserDialogFindDestination.ShowDialog() == DialogResult.OK)
             {
-                _destinationPath = string.Format("{0}.__codeonthefly.csv", browserDialogFindDestination.SelectedPath);
+                _destinationPath = string.Format(@"{0}\__codeonthefly.csv", browserDialogFindDestination.SelectedPath);
                 tboxDestinationFileLocation.Text = _destinationPath;
             }
         }
