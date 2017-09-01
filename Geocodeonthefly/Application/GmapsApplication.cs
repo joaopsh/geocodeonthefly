@@ -10,42 +10,43 @@ namespace Geocodeonthefly.Application
     {
         private const string requestUri = "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false";
 
-        public async Task<ICollection<Address>> GetGeocodesAsync(ICollection<Address> addresses)
+        public async Task<IList<Address>> GetGeocodesAsync(IList<Address> addresses)
         {
-            foreach (var address in addresses)
+            using (var client = new HttpClient())
             {
-                // {street}, {number}, {neighborhood}, {city} - {state}, {postalCode}, {country}
-                var addressString = string.Format("{0}, {1}, {2}, {3} - {4}, {5}, {6}",
-                    address.Street,
-                    address.Number,
-                    address.Neighborhood,
-                    address.City,
-                    address.State,
-                    address.Postalcode,
-                    address.Country);
-
-                var formatedUri = string.Format(requestUri, addressString);
-
-                using (var client = new HttpClient())
+                var tasks = new List<Task>();
+                
+                foreach (var address in addresses)
                 {
+                    // {street}, {number}, {neighborhood}, {city} - {state}, {postalCode}, {country}
+                    var addressString = string.Format("{0}, {1}, {2}, {3} - {4}, {5}, {6}",
+                        address.Street,
+                        address.Number,
+                        address.Neighborhood,
+                        address.City,
+                        address.State,
+                        address.Postalcode,
+                        address.Country);
 
-                    var request = await client.GetAsync(string.Format(formatedUri, address));
-                    var content = await request.Content.ReadAsStringAsync();
-                    dynamic jsonResponse = JsonConvert.DeserializeObject<dynamic>(content);
+                    var formatedUri = string.Format(requestUri, addressString);
 
-                    try
+                    tasks.Add(client.GetAsync(formatedUri).ContinueWith(async t =>
                     {
-                        address.Lat = jsonResponse.results[0].geometry.location.lat;
-                        address.Lng = jsonResponse.results[0].geometry.location.lng;
-                    } catch
-                    {
-                        
-                    };
-                    
+                        var content = await t.Result.Content.ReadAsStringAsync();
+                        dynamic jsonResponse = JsonConvert.DeserializeObject<dynamic>(content);
 
+                        try
+                        {
+                            address.Lat = jsonResponse.results[0].geometry.location.lat;
+                            address.Lng = jsonResponse.results[0].geometry.location.lng;
+                        }
+                        catch { };
+                    }));
                 }
+                
+                await Task.WhenAll(tasks);
             }
-
+            
             return addresses;
         }
     }

@@ -7,7 +7,7 @@ namespace Geocodeonthefly.Application
 {
     public class SpreadsheetApplication
     {
-        public ICollection<Address> ReadFromCsv(string path, char csvSeparator = ';')
+        public IList<Address> ReadFromCsv(string path, char csvSeparator = ';')
         {
             var addresses = new List<Address>();
             
@@ -41,7 +41,7 @@ namespace Geocodeonthefly.Application
             return addresses;
         }
 
-        public void WriteCsv(ICollection<Address> addresses, string destinationPath, char csvSeparator = ';')
+        public void WriteCsv(IList<Address> addresses, string destinationPath, char csvSeparator = ';')
         {
             var csv = new StringBuilder();
 
