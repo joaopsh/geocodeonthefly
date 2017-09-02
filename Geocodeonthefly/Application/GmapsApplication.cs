@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace Geocodeonthefly.Application
 {
     public class GmapsApplication
     {
-        private const string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=AIzaSyCs2VLFW6OnEX2TjCHUSCGVBLmtqI4Xt94&sensor=false";
+        private const string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=MYKEY&sensor=false";
 
         public async Task<IList<Address>> GetGeocodesAsync(IList<Address> addresses)
         {
