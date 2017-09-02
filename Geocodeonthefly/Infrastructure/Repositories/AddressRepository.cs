@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Text;
 using Geocodeonthefly.Domain;
@@ -10,6 +12,13 @@ namespace Geocodeonthefly.Infrastructure.Repositories
 {
     public class AddressRepository
     {
+        private readonly char _csvDelimiter;
+
+        public AddressRepository()
+        {
+            _csvDelimiter = Convert.ToChar(ConfigurationSettings.AppSettings["csv-delimiter"]);
+        }
+
         public IList<Address> Read(string path)
         {
             var addresses = new List<Address>();
@@ -97,9 +106,9 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             }
 
             row.GetCell(0).CellStyle.Alignment = HorizontalAlignment.Left;
-            sheet.SetColumnWidth(0, 10000);
+            sheet.SetColumnWidth(0, 14000);
             sheet.SetColumnWidth(1, 4000);
-            sheet.SetColumnWidth(2, 4000);
+            sheet.SetColumnWidth(2, 8000);
             sheet.SetColumnWidth(3, 4000);
             sheet.SetColumnWidth(4, 4000);
             sheet.SetColumnWidth(5, 4000);
@@ -112,8 +121,9 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             }
         }
 
-        public IList<Address> ReadCsv(string path, char csvDelimiter = ';')
+        public IList<Address> ReadCsv(string path)
         {
+            
             var addresses = new List<Address>();
 
             using (var reader = new StreamReader(path, Encoding.Default))
@@ -124,7 +134,7 @@ namespace Geocodeonthefly.Infrastructure.Repositories
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var values = line.Split(csvDelimiter);
+                    var values = line.Split(_csvDelimiter);
 
                     var address = new Address();
 
@@ -146,15 +156,15 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             return addresses;
         }
 
-        public void WriteCsv(IList<Address> addresses, string destinationPath, char csvDelimiter = ';')
+        public void WriteCsv(IList<Address> addresses, string destinationPath)
         {
             var csv = new StringBuilder();
 
-            csv.AppendLine(string.Format("Endereço{0}Número{0}Bairro{0}Cep{0}Estado{0}Cidade{0}Lat{0}Lng", csvDelimiter));
+            csv.AppendLine(string.Format("Endereço{0}Número{0}Bairro{0}Cep{0}Estado{0}Cidade{0}Lat{0}Lng", _csvDelimiter));
 
             foreach (var address in addresses)
             {
-                csv.AppendLine(string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}", csvDelimiter,
+                csv.AppendLine(string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}", _csvDelimiter,
                     address.Street,
                     address.Number,
                     address.Neighborhood,

@@ -57,10 +57,6 @@
             this.btnFindSourceFile.UseVisualStyleBackColor = true;
             this.btnFindSourceFile.Click += new System.EventHandler(this.btnFind_Click);
             // 
-            // openFileDialogCsv
-            // 
-            this.openFileDialogCsv.FileName = "openFileDialog1";
-            // 
             // fileSystemWatcher1
             // 
             this.fileSystemWatcher1.EnableRaisingEvents = true;

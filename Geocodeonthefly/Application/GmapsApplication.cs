@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Geocodeonthefly.Domain;
+using Geocodeonthefly.Infrastructure.Log;
 using Newtonsoft.Json;
 
 namespace Geocodeonthefly.Application
 {
     public class GmapsApplication
     {
-        private const string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=MYKEY&sensor=false";
+        private readonly string _requestUri;
+        private readonly Log _logger;
+        
+        public GmapsApplication()
+        {
+            _requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=" + ConfigurationSettings.AppSettings["gmaps-api-key"] + "&sensor=false";
+            _logger = new Log();
+        }
 
         public async Task<IList<Address>> GetGeocodesAsync(IList<Address> addresses)
         {
@@ -34,7 +43,7 @@ namespace Geocodeonthefly.Application
                         address.Postalcode,
                         address.Country);
 
-                    var formatedUri = string.Format(requestUri, addressString);
+                    var formatedUri = string.Format(_requestUri, addressString);
 
                     tasks.Add(client.GetAsync(formatedUri).ContinueWith(async t =>
                     {
@@ -48,11 +57,7 @@ namespace Geocodeonthefly.Application
                         }
                         catch
                         {
-                            Console.WriteLine("----- FAILED -----");
-                            Console.WriteLine("Request URI: " + formatedUri);
-                            Console.WriteLine("Request Code: " + (int)t.Result.StatusCode);
-                            Console.WriteLine("Response: " + content);
-                            Console.WriteLine("----- END -----");
+                            _logger.GmapsError(formatedUri, (int)t.Result.StatusCode, content);
                         };
                         
                     }));
