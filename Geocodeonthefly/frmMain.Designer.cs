@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.tboxSourceFileLocation = new System.Windows.Forms.TextBox();
             this.btnFindSourceFile = new System.Windows.Forms.Button();
             this.openFileDialogCsv = new System.Windows.Forms.OpenFileDialog();
@@ -56,6 +57,10 @@
             this.btnFindSourceFile.Text = "Select file";
             this.btnFindSourceFile.UseVisualStyleBackColor = true;
             this.btnFindSourceFile.Click += new System.EventHandler(this.btnFind_Click);
+            // 
+            // openFileDialogCsv
+            // 
+            this.openFileDialogCsv.Filter = "Excel Files|*.xlsx;";
             // 
             // fileSystemWatcher1
             // 
@@ -100,6 +105,8 @@
             this.Controls.Add(this.tboxDestinationFileLocation);
             this.Controls.Add(this.btnFindSourceFile);
             this.Controls.Add(this.tboxSourceFileLocation);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "Geocodeonthefly";
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();

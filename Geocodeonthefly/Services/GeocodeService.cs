@@ -1,4 +1,5 @@
-﻿using Geocodeonthefly.Application;
+﻿using System.Threading.Tasks;
+using Geocodeonthefly.Application;
 using Geocodeonthefly.Infrastructure.Repositories;
 
 namespace Geocodeonthefly.Services
@@ -14,7 +15,7 @@ namespace Geocodeonthefly.Services
             _csvAddressRepository = new AddressRepository();
         }
 
-        public async void GenerateGeocodes(string sourceCsvPath, string destinationCsvPath)
+        public async Task GenerateGeocodes(string sourceCsvPath, string destinationCsvPath)
         {
             var sourceAddresses = _csvAddressRepository.Read(sourceCsvPath);
             var destinationAddresses = await _gmaps.GetGeocodesAsync(sourceAddresses);

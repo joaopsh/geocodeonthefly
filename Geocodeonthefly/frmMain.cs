@@ -48,7 +48,21 @@ namespace Geocodeonthefly
 
             try
             {
-                _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
+                btnGo.Enabled = false;
+                btnFindDestinationLocation.Enabled = false;
+                btnFindSourceFile.Enabled = false;
+                btnGo.Text = "Working...";
+                
+                await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
+
+                btnGo.Enabled = true;
+                btnFindDestinationLocation.Enabled = true;
+                btnFindSourceFile.Enabled = true;
+                _destinationPath = string.Empty;
+                _sourcePath = string.Empty;
+                tboxDestinationFileLocation.Text = string.Empty;
+                tboxSourceFileLocation.Text = string.Empty;
+                btnGo.Text = "Go!";
 
             }
             catch (Exception ex)
