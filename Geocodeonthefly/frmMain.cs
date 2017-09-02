@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows.Forms;
 
 namespace Geocodeonthefly
@@ -13,6 +14,10 @@ namespace Geocodeonthefly
         {
             InitializeComponent();
             _geocodeService = new Services.GeocodeService();
+
+            // Setup of how many concurrent requests the application is allowed to make with HttpClient.
+            ServicePointManager.DefaultConnectionLimit = 50;
+
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -28,7 +33,7 @@ namespace Geocodeonthefly
         {
             if (browserDialogFindDestination.ShowDialog() == DialogResult.OK)
             {
-                _destinationPath = string.Format(@"{0}\__codeonthefly.csv", browserDialogFindDestination.SelectedPath);
+                _destinationPath = string.Format(@"{0}\__codeonthefly.xlsx", browserDialogFindDestination.SelectedPath);
                 tboxDestinationFileLocation.Text = _destinationPath;
             }
         }
@@ -43,7 +48,7 @@ namespace Geocodeonthefly
 
             try
             {
-                _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath, tboxSeparator.Text[0]);
+                _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
 
             }
             catch (Exception ex)
