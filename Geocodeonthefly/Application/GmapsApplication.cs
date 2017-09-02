@@ -12,7 +12,7 @@ namespace Geocodeonthefly.Application
 {
     public class GmapsApplication
     {
-        private const string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=MYKEY&sensor=false";
+        private const string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=AIzaSyCs2VLFW6OnEX2TjCHUSCGVBLmtqI4Xt94&sensor=false";
 
         public async Task<IList<Address>> GetGeocodesAsync(IList<Address> addresses)
         {
@@ -23,7 +23,7 @@ namespace Geocodeonthefly.Application
                 // Let's see how fast It is!
                 var watch = Stopwatch.StartNew();
 
-                foreach (var address in addresses.Where(x => string.IsNullOrWhiteSpace(x.Lat) || string.IsNullOrWhiteSpace(x.Lng)))
+                foreach (var address in addresses)
                 {
                     // {street}, {number}, {neighborhood}, {city} - {state}, {postalCode}, {country}
                     var addressString = string.Format("{0}, {1}, {2}, {3} - {4}, {5}, {6}",
