@@ -35,8 +35,8 @@
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.tboxDestinationFileLocation = new System.Windows.Forms.TextBox();
             this.btnFindDestinationLocation = new System.Windows.Forms.Button();
-            this.browserDialogFindDestination = new System.Windows.Forms.FolderBrowserDialog();
             this.btnGo = new System.Windows.Forms.Button();
+            this.saveFileDialogDestination = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,6 +95,10 @@
             this.btnGo.UseVisualStyleBackColor = true;
             this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
+            // saveFileDialogDestination
+            // 
+            this.saveFileDialogDestination.Filter = "Excel Files|*.xlsx;";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -123,8 +127,8 @@
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.TextBox tboxDestinationFileLocation;
         private System.Windows.Forms.Button btnFindDestinationLocation;
-        private System.Windows.Forms.FolderBrowserDialog browserDialogFindDestination;
         private System.Windows.Forms.Button btnGo;
+        private System.Windows.Forms.SaveFileDialog saveFileDialogDestination;
     }
 }
 

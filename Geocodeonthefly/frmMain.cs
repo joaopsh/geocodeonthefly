@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Geocodeonthefly
@@ -31,9 +32,9 @@ namespace Geocodeonthefly
 
         private void btnFindDestinationLocation_Click(object sender, EventArgs e)
         {
-            if (browserDialogFindDestination.ShowDialog() == DialogResult.OK)
+            if (saveFileDialogDestination.ShowDialog() == DialogResult.OK)
             {
-                _destinationPath = string.Format(@"{0}\__codeonthefly.xlsx", browserDialogFindDestination.SelectedPath);
+                _destinationPath = saveFileDialogDestination.FileName;
                 tboxDestinationFileLocation.Text = _destinationPath;
             }
         }
@@ -52,8 +53,11 @@ namespace Geocodeonthefly
                 btnFindDestinationLocation.Enabled = false;
                 btnFindSourceFile.Enabled = false;
                 btnGo.Text = "Working...";
-                
-                await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
+
+                await Task.Run(async () =>
+                {
+                    await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
+                });
 
                 btnGo.Enabled = true;
                 btnFindDestinationLocation.Enabled = true;
@@ -69,6 +73,11 @@ namespace Geocodeonthefly
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void saveFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
