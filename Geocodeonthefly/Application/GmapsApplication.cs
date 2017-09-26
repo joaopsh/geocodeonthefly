@@ -30,9 +30,7 @@ namespace Geocodeonthefly.Application
 
                 // Let's see how fast It is!
                 var watch = Stopwatch.StartNew();
-
-                var orderedAddresses = new SortedList<int, Address>();
-
+                
                 foreach (var address in addresses)
                 {
                     // {street}, {number}, {neighborhood}, {city} - {state}, {postalCode}, {country}

@@ -74,10 +74,5 @@ namespace Geocodeonthefly
                 MessageBox.Show(ex.Message);
             }
         }
-
-        private void saveFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
     }
 }
