@@ -44,7 +44,7 @@ namespace Geocodeonthefly
         {
             if (string.IsNullOrWhiteSpace(_sourcePath) || string.IsNullOrWhiteSpace(_sourcePath))
             {
-                MessageBox.Show("You must select the source file and output destination!");
+                MessageBox.Show("You must select the source file and the output destination!", "Missing paths", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -57,18 +57,17 @@ namespace Geocodeonthefly
                 {
                     await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
                 });
-                
-                CleanInputs();
-                EnableUiControllers(true);
-
-                btnGo.Text = "Go!";
 
                 MessageBox.Show("The operation finished successfully!", "Operation finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CleanInputs();
+                EnableUiControllers(true);
+
+                btnGo.Text = "Go!";
             }
         }
 
