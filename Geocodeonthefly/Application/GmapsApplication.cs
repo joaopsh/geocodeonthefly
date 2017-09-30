@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
@@ -18,7 +17,7 @@ namespace Geocodeonthefly.Application
         
         public GmapsApplication()
         {
-            _requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=" + ConfigurationSettings.AppSettings["gmaps-api-key"] + "&sensor=false";
+            _requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=" + Helpers.GetAppSetting("gmaps-api-key") + "&sensor=false";
             _logger = new Log();
         }
 

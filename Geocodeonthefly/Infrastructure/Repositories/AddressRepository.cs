@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using Geocodeonthefly.Domain;
@@ -16,7 +15,7 @@ namespace Geocodeonthefly.Infrastructure.Repositories
 
         public AddressRepository()
         {
-            _csvDelimiter = Convert.ToChar(ConfigurationSettings.AppSettings["csv-delimiter"]);
+            _csvDelimiter = Convert.ToChar(Helpers.GetAppSetting("csv-delimiter"));
         }
 
         public IList<Address> Read(string path)
