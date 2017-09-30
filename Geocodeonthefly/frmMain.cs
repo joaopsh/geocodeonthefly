@@ -62,7 +62,7 @@ namespace Geocodeonthefly
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -104,9 +104,16 @@ namespace Geocodeonthefly
             {
                 var sourceFilePath = string.Format(@"{0}/Resources/model.xlsx", Helpers.appPath);
                 var destinationPath = string.Format(@"{0}/geocodeonthefly_model.xlsx", folderBrowserDialogExcelModel.SelectedPath);
-                File.Copy(sourceFilePath, destinationPath, true);
 
-                MessageBox.Show(@"File ""geocodeonthefly_model.xlsx"" was saved in the selected folder!", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    File.Copy(sourceFilePath, destinationPath, true);
+                    MessageBox.Show(@"File ""geocodeonthefly_model.xlsx"" was saved in the selected folder!", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

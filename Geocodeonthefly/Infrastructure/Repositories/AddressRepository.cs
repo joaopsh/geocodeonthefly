@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Geocodeonthefly.Domain;
 using NPOI.SS.UserModel;
@@ -54,6 +55,12 @@ namespace Geocodeonthefly.Infrastructure.Repositories
                 });
             }
 
+            // Removes empty entries that could be read from excel.
+            addresses = addresses.Where(x => !string.IsNullOrWhiteSpace(x.Street) 
+            && !string.IsNullOrWhiteSpace(x.Neighborhood) 
+            && !string.IsNullOrWhiteSpace(x.Number)
+            && !string.IsNullOrWhiteSpace(x.City)).ToList();
+
             return addresses;
         }
 
@@ -73,6 +80,13 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             row.CreateCell(5).SetCellValue("City");
             row.CreateCell(6).SetCellValue("Lat");
             row.CreateCell(7).SetCellValue("Lng");
+
+            row.CreateCell(8).SetCellValue("API Street");
+            row.CreateCell(9).SetCellValue("API Number");
+            row.CreateCell(10).SetCellValue("API Neighborhood");
+            row.CreateCell(11).SetCellValue("API Postal Code");
+            row.CreateCell(12).SetCellValue("API State");
+            row.CreateCell(13).SetCellValue("API City");
             rowIndex++;
 
             var headerStyle = workbook.CreateCellStyle();
@@ -90,6 +104,18 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             row.GetCell(6).CellStyle = headerStyle;
             row.GetCell(7).CellStyle = headerStyle;
 
+            row.GetCell(8).CellStyle = headerStyle;
+            row.GetCell(9).CellStyle = headerStyle;
+            row.GetCell(10).CellStyle = headerStyle;
+            row.GetCell(11).CellStyle = headerStyle;
+            row.GetCell(12).CellStyle = headerStyle;
+            row.GetCell(13).CellStyle = headerStyle;
+
+            ICellStyle apiCellStyle = workbook.CreateCellStyle();
+            apiCellStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.PaleBlue.Index;
+            apiCellStyle.FillPattern = FillPattern.SolidForeground;
+            apiCellStyle.BorderBottom = BorderStyle.Medium;
+
             foreach (var address in addresses)
             {
                 row = sheet.CreateRow(rowIndex);
@@ -101,6 +127,31 @@ namespace Geocodeonthefly.Infrastructure.Repositories
                 row.CreateCell(5).SetCellValue(address.City);
                 row.CreateCell(6).SetCellValue(address.Lat);
                 row.CreateCell(7).SetCellValue(address.Lng);
+                
+                var apiStreetCell = row.CreateCell(8);
+                apiStreetCell.SetCellValue(address.ApiStreet);
+                apiStreetCell.CellStyle = apiCellStyle;
+
+                var apiNumberCell = row.CreateCell(9);
+                apiNumberCell.SetCellValue(address.ApiNumber);
+                apiNumberCell.CellStyle = apiCellStyle;
+
+                var apiNeighborhoodCell = row.CreateCell(10);
+                apiNeighborhoodCell.SetCellValue(address.ApiNeighborhood);
+                apiNeighborhoodCell.CellStyle = apiCellStyle;
+
+                var apiPostalCodeCell = row.CreateCell(11);
+                apiPostalCodeCell.SetCellValue(address.ApiPostalcode);
+                apiPostalCodeCell.CellStyle = apiCellStyle;
+
+                var apiStateCell = row.CreateCell(12);
+                apiStateCell.SetCellValue(address.ApiState);
+                apiStateCell.CellStyle = apiCellStyle;
+
+                var apiCityCell = row.CreateCell(13);
+                apiCityCell.SetCellValue(address.ApiCity);
+                apiCityCell.CellStyle = apiCellStyle;
+                
                 rowIndex++;
             }
 
@@ -113,7 +164,14 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             sheet.SetColumnWidth(5, 4000);
             sheet.SetColumnWidth(6, 4000);
             sheet.SetColumnWidth(7, 4000);
-            
+
+            sheet.SetColumnWidth(8, 14000);
+            sheet.SetColumnWidth(9, 4000);
+            sheet.SetColumnWidth(10, 8000);
+            sheet.SetColumnWidth(11, 4000);
+            sheet.SetColumnWidth(12, 4000);
+            sheet.SetColumnWidth(13, 4000);
+
             using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 workbook.Write(stream);

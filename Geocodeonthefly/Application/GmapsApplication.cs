@@ -12,17 +12,17 @@ namespace Geocodeonthefly.Application
 {
     public class GmapsApplication
     {
-        private readonly string _requestUri;
         private readonly Log _logger;
         
         public GmapsApplication()
         {
-            _requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=" + Helpers.GetAppSetting("gmaps-api-key") + "&sensor=false";
             _logger = new Log();
         }
 
         public async Task<IList<Address>> GetGeocodesAsync(IList<Address> addresses)
         {
+            string requestUri = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&key=" + Helpers.GetAppSetting("gmaps-api-key") + "&sensor=false";
+            
             using (var client = new HttpClient())
             {
                 var tasks = new List<Task>();
@@ -42,7 +42,7 @@ namespace Geocodeonthefly.Application
                         address.Postalcode,
                         address.Country);
 
-                    var formatedUri = string.Format(_requestUri, addressString);
+                    var formatedUri = string.Format(requestUri, addressString);
 
                     tasks.Add(client.GetAsync(formatedUri).ContinueWith(async t =>
                     {
@@ -53,6 +53,14 @@ namespace Geocodeonthefly.Application
                         {
                             address.Lat = jsonResponse.results[0].geometry.location.lat;
                             address.Lng = jsonResponse.results[0].geometry.location.lng;
+
+                            address.ApiNumber = jsonResponse.results[0].address_components[0].long_name;
+                            address.ApiStreet = jsonResponse.results[0].address_components[1].long_name;
+                            address.ApiNeighborhood = jsonResponse.results[0].address_components[2].long_name;
+                            address.ApiCity = jsonResponse.results[0].address_components[3].long_name;
+                            address.ApiState = jsonResponse.results[0].address_components[4].long_name;
+                            address.ApiCountry = jsonResponse.results[0].address_components[5].long_name;
+                            address.ApiPostalcode = jsonResponse.results[0].address_components[6].long_name;
                         }
                         catch
                         {
