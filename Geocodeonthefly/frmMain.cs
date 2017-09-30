@@ -1,17 +1,18 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Geocodeonthefly
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
         private Services.GeocodeService _geocodeService;
         private string _destinationPath;
         private string _sourcePath;
 
-        public frmMain()
+        public FrmMain()
         {
             InitializeComponent();
             _geocodeService = new Services.GeocodeService();
@@ -72,6 +73,29 @@ namespace Geocodeonthefly
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void aPIKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var modal = new ModalConfigApiKey();
+            modal.ShowDialog(this);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void saveModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialogExcelModel.ShowDialog() == DialogResult.OK)
+            {
+                var sourceFilePath = string.Format(@"{0}/Resources/model.xlsx", Helpers.appPath);
+                var destinationPath = string.Format(@"{0}/geocodeonthefly_model.xlsx", folderBrowserDialogExcelModel.SelectedPath);
+                File.Copy(sourceFilePath, destinationPath, true);
+
+                MessageBox.Show(@"File ""geocodeonthefly_model.xlsx"" was saved in the selected folder!", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

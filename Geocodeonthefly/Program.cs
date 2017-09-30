@@ -12,7 +12,7 @@ namespace Geocodeonthefly
         {
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-            System.Windows.Forms.Application.Run(new frmMain());
+            System.Windows.Forms.Application.Run(new FrmMain());
         }
     }
 }
