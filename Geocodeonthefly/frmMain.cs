@@ -50,30 +50,41 @@ namespace Geocodeonthefly
 
             try
             {
-                btnGo.Enabled = false;
-                btnFindDestinationLocation.Enabled = false;
-                btnFindSourceFile.Enabled = false;
+                EnableUiControllers(false);
                 btnGo.Text = "Working...";
 
                 await Task.Run(async () =>
                 {
                     await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
                 });
+                
+                CleanInputs();
+                EnableUiControllers(true);
 
-                btnGo.Enabled = true;
-                btnFindDestinationLocation.Enabled = true;
-                btnFindSourceFile.Enabled = true;
-                _destinationPath = string.Empty;
-                _sourcePath = string.Empty;
-                tboxDestinationFileLocation.Text = string.Empty;
-                tboxSourceFileLocation.Text = string.Empty;
                 btnGo.Text = "Go!";
+
+                MessageBox.Show("The operation finished successfully!", "Operation finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void CleanInputs()
+        {
+            _destinationPath = string.Empty;
+            _sourcePath = string.Empty;
+            tboxDestinationFileLocation.Text = string.Empty;
+            tboxSourceFileLocation.Text = string.Empty;
+        }
+
+        private void EnableUiControllers(bool status)
+        {
+            btnGo.Enabled = status;
+            btnFindDestinationLocation.Enabled = status;
+            btnFindSourceFile.Enabled = status;
         }
 
         private void aPIKeyToolStripMenuItem_Click(object sender, EventArgs e)

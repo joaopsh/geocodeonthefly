@@ -169,7 +169,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(431, 124);
+            this.ClientSize = new System.Drawing.Size(431, 121);
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.btnFindDestinationLocation);
             this.Controls.Add(this.tboxDestinationFileLocation);
