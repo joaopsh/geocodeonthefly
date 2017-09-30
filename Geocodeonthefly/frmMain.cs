@@ -19,7 +19,6 @@ namespace Geocodeonthefly
 
             // Setup of how many concurrent requests the application is allowed to make with HttpClient.
             ServicePointManager.DefaultConnectionLimit = 50;
-
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -58,15 +57,16 @@ namespace Geocodeonthefly
                     await _geocodeService.GenerateGeocodes(_sourcePath, _destinationPath);
                 });
 
+                CleanInputs();
                 MessageBox.Show("The operation finished successfully!", "Operation finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Something went wrong...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                CleanInputs();
+            }
+            finally
+            {
                 EnableUiControllers(true);
-
                 btnGo.Text = "Go!";
             }
         }
@@ -84,6 +84,7 @@ namespace Geocodeonthefly
             btnGo.Enabled = status;
             btnFindDestinationLocation.Enabled = status;
             btnFindSourceFile.Enabled = status;
+            menuStrip.Enabled = status;
         }
 
         private void aPIKeyToolStripMenuItem_Click(object sender, EventArgs e)
