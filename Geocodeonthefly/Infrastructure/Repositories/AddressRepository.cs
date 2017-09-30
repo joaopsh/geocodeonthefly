@@ -60,17 +60,17 @@ namespace Geocodeonthefly.Infrastructure.Repositories
         public void Write(IList<Address> addresses, string path)
         {
             var workbook = new XSSFWorkbook();
-            var sheet = (XSSFSheet)workbook.CreateSheet("Endereços Geolocalizados");
+            var sheet = (XSSFSheet)workbook.CreateSheet("Geocoded Addresses");
 
             var rowIndex = 0;
             var row = sheet.CreateRow(rowIndex);
 
-            row.CreateCell(0).SetCellValue("Endereço");
-            row.CreateCell(1).SetCellValue("Número");
-            row.CreateCell(2).SetCellValue("Bairro");
-            row.CreateCell(3).SetCellValue("CEP");
-            row.CreateCell(4).SetCellValue("Estado");
-            row.CreateCell(5).SetCellValue("Cidade");
+            row.CreateCell(0).SetCellValue("Street");
+            row.CreateCell(1).SetCellValue("Number");
+            row.CreateCell(2).SetCellValue("Neighborhood");
+            row.CreateCell(3).SetCellValue("Postal Code");
+            row.CreateCell(4).SetCellValue("State");
+            row.CreateCell(5).SetCellValue("City");
             row.CreateCell(6).SetCellValue("Lat");
             row.CreateCell(7).SetCellValue("Lng");
             rowIndex++;
@@ -159,7 +159,7 @@ namespace Geocodeonthefly.Infrastructure.Repositories
         {
             var csv = new StringBuilder();
 
-            csv.AppendLine(string.Format("Endereço{0}Número{0}Bairro{0}Cep{0}Estado{0}Cidade{0}Lat{0}Lng", _csvDelimiter));
+            csv.AppendLine(string.Format("Street{0}Number{0}Neighborhood{0}PostalCode{0}State{0}City{0}Lat{0}Lng", _csvDelimiter));
 
             foreach (var address in addresses)
             {
