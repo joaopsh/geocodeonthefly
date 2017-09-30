@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Geocodeonthefly.Domain;
 using Geocodeonthefly.Infrastructure.Log;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Geocodeonthefly.Application
 {
@@ -47,22 +48,23 @@ namespace Geocodeonthefly.Application
                     tasks.Add(client.GetAsync(formatedUri).ContinueWith(async t =>
                     {
                         var content = await t.Result.Content.ReadAsStringAsync();
-                        dynamic jsonResponse = JsonConvert.DeserializeObject<dynamic>(content);
-
+                        GmapsResponseDTO.RootObject response = JsonConvert.DeserializeObject<GmapsResponseDTO.RootObject>(content);
+                        
                         try
                         {
-                            address.Lat = jsonResponse.results[0].geometry.location.lat;
-                            address.Lng = jsonResponse.results[0].geometry.location.lng;
+                            address.ApiLat = response.results[0].geometry.location.lat;
+                            address.ApiLng = response.results[0].geometry.location.lng;
 
-                            address.ApiNumber = jsonResponse.results[0].address_components[0].long_name;
-                            address.ApiStreet = jsonResponse.results[0].address_components[1].long_name;
-                            address.ApiNeighborhood = jsonResponse.results[0].address_components[2].long_name;
-                            address.ApiCity = jsonResponse.results[0].address_components[3].long_name;
-                            address.ApiState = jsonResponse.results[0].address_components[4].long_name;
-                            address.ApiCountry = jsonResponse.results[0].address_components[5].long_name;
-                            address.ApiPostalcode = jsonResponse.results[0].address_components[6].long_name;
+                            address.ApiNumber = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("street_number"))?.long_name;
+                            address.ApiStreet = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("route"))?.long_name;
+                            address.ApiNeighborhood = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("sublocality"))?.long_name;
+                            address.ApiCity = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("administrative_area_level_2"))?.long_name;
+                            address.ApiState = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("administrative_area_level_1"))?.long_name;
+                            address.ApiCountry = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("country"))?.long_name;
+                            address.ApiPostalcode = response.results[0].address_components.FirstOrDefault(x => x.types.Contains("postal_code"))?.long_name;
+                            
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             _logger.GmapsError(formatedUri, (int)t.Result.StatusCode, content);
                         };

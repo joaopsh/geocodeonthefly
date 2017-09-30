@@ -16,9 +16,9 @@
         
         public string Postalcode { get; set; }
 
-        public string Lat { get; set; }
+        public double ApiLat { get; set; }
 
-        public string Lng { get; set; }
+        public double ApiLng { get; set; }
 
         public string ApiCountry { get; set; }
 

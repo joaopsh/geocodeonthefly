@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Application\GmapsApplication.cs" />
     <Compile Include="Domain\Address.cs" />
+    <Compile Include="Domain\GmapsResponseDTO.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>

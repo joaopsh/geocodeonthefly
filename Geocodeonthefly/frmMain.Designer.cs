@@ -133,19 +133,19 @@
             // saveModelToolStripMenuItem
             // 
             this.saveModelToolStripMenuItem.Name = "saveModelToolStripMenuItem";
-            this.saveModelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveModelToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.saveModelToolStripMenuItem.Text = "Save model";
             this.saveModelToolStripMenuItem.Click += new System.EventHandler(this.saveModelToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(132, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 

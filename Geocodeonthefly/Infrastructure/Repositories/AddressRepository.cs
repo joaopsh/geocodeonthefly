@@ -78,9 +78,9 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             row.CreateCell(3).SetCellValue("Postal Code");
             row.CreateCell(4).SetCellValue("State");
             row.CreateCell(5).SetCellValue("City");
-            row.CreateCell(6).SetCellValue("Lat");
-            row.CreateCell(7).SetCellValue("Lng");
 
+            row.CreateCell(6).SetCellValue("API Lat");
+            row.CreateCell(7).SetCellValue("API Lng");
             row.CreateCell(8).SetCellValue("API Street");
             row.CreateCell(9).SetCellValue("API Number");
             row.CreateCell(10).SetCellValue("API Neighborhood");
@@ -111,46 +111,121 @@ namespace Geocodeonthefly.Infrastructure.Repositories
             row.GetCell(12).CellStyle = headerStyle;
             row.GetCell(13).CellStyle = headerStyle;
 
-            ICellStyle apiCellStyle = workbook.CreateCellStyle();
-            apiCellStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.PaleBlue.Index;
-            apiCellStyle.FillPattern = FillPattern.SolidForeground;
-            apiCellStyle.BorderBottom = BorderStyle.Medium;
+            // API results cell style
+            byte[] borderRgb = new byte[3] { 178, 178, 178 };
+
+
+            byte[] successRgb = new byte[3] { 220, 250, 230 };
+            XSSFCellStyle successCellStyle = (XSSFCellStyle)workbook.CreateCellStyle();
+            successCellStyle.FillPattern = FillPattern.SolidForeground;
+            successCellStyle.SetFillForegroundColor(new XSSFColor(successRgb));
+            successCellStyle.BorderBottom = BorderStyle.Thin;
+            successCellStyle.BorderTop = BorderStyle.Thin;
+            successCellStyle.BorderLeft = BorderStyle.Thin;
+            successCellStyle.BorderRight = BorderStyle.Thin;
+            successCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.BOTTOM, new XSSFColor(borderRgb));
+            successCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.TOP, new XSSFColor(borderRgb));
+            successCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.LEFT, new XSSFColor(borderRgb));
+            successCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.RIGHT, new XSSFColor(borderRgb));
+            
+            byte[] errorRgb = new byte[3] { 250, 220, 220 };
+            XSSFCellStyle errorCellStyle = (XSSFCellStyle)workbook.CreateCellStyle();
+            errorCellStyle.FillPattern = FillPattern.SolidForeground;
+            errorCellStyle.SetFillForegroundColor(new XSSFColor(errorRgb));
+            errorCellStyle.BorderBottom = BorderStyle.Thin;
+            errorCellStyle.BorderTop = BorderStyle.Thin;
+            errorCellStyle.BorderLeft = BorderStyle.Thin;
+            errorCellStyle.BorderRight = BorderStyle.Thin;
+            errorCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.BOTTOM, new XSSFColor(borderRgb));
+            errorCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.TOP, new XSSFColor(borderRgb));
+            errorCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.LEFT, new XSSFColor(borderRgb));
+            errorCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.RIGHT, new XSSFColor(borderRgb));
 
             foreach (var address in addresses)
             {
                 row = sheet.CreateRow(rowIndex);
-                row.CreateCell(0).SetCellValue(address.Street);
-                row.CreateCell(1).SetCellValue(address.Number);
-                row.CreateCell(2).SetCellValue(address.Neighborhood);
-                row.CreateCell(3).SetCellValue(address.Postalcode);
-                row.CreateCell(4).SetCellValue(address.State);
-                row.CreateCell(5).SetCellValue(address.City);
-                row.CreateCell(6).SetCellValue(address.Lat);
-                row.CreateCell(7).SetCellValue(address.Lng);
-                
+
+                // Configure cell color by found result 
+                var didFindResult = address.ApiLat != 0 && address.ApiLng != 0;
+
+                var cellStyle = successCellStyle;
+
+                if (!didFindResult)
+                    cellStyle = errorCellStyle;
+
+                // Addresses replication
+                var streetCell = row.CreateCell(0);
+                streetCell.SetCellValue(address.Street);
+                if (!didFindResult)
+                    streetCell.CellStyle = cellStyle;
+
+                var numberCell = row.CreateCell(1);
+                numberCell.SetCellValue(address.Number);
+                if (!didFindResult)
+                    numberCell.CellStyle = cellStyle;
+
+
+                var neighborhoodCell = row.CreateCell(2);
+                neighborhoodCell.SetCellValue(address.Neighborhood);
+                if (!didFindResult)
+                    neighborhoodCell.CellStyle = cellStyle;
+
+
+                var postalCodeCell = row.CreateCell(3);
+                postalCodeCell.SetCellValue(address.Postalcode);
+                if (!didFindResult)
+                    postalCodeCell.CellStyle = cellStyle;
+
+
+                var stateCell = row.CreateCell(4);
+                stateCell.SetCellValue(address.State);
+                if (!didFindResult)
+                    stateCell.CellStyle = cellStyle;
+
+
+                var cityCell = row.CreateCell(5);
+                cityCell.SetCellValue(address.City);
+                if (!didFindResult)
+                    cityCell.CellStyle = cellStyle;
+
+
+                // API results
+                var apiLatCell = row.CreateCell(6);
+                if(address.ApiLat != 0 || address.ApiLng != 0)
+                    apiLatCell.SetCellValue(address.ApiLat);
+                apiLatCell.CellStyle = cellStyle;
+
+
+                var apiLngCell = row.CreateCell(7);
+                if (address.ApiLat != 0 || address.ApiLng != 0)
+                    apiLngCell.SetCellValue(address.ApiLng);
+                apiLngCell.CellStyle = cellStyle;
+
+
                 var apiStreetCell = row.CreateCell(8);
                 apiStreetCell.SetCellValue(address.ApiStreet);
-                apiStreetCell.CellStyle = apiCellStyle;
+                apiStreetCell.CellStyle = cellStyle;
+
 
                 var apiNumberCell = row.CreateCell(9);
                 apiNumberCell.SetCellValue(address.ApiNumber);
-                apiNumberCell.CellStyle = apiCellStyle;
+                apiNumberCell.CellStyle = cellStyle;
 
                 var apiNeighborhoodCell = row.CreateCell(10);
                 apiNeighborhoodCell.SetCellValue(address.ApiNeighborhood);
-                apiNeighborhoodCell.CellStyle = apiCellStyle;
+                apiNeighborhoodCell.CellStyle = cellStyle;
 
                 var apiPostalCodeCell = row.CreateCell(11);
                 apiPostalCodeCell.SetCellValue(address.ApiPostalcode);
-                apiPostalCodeCell.CellStyle = apiCellStyle;
+                apiPostalCodeCell.CellStyle = cellStyle;
 
                 var apiStateCell = row.CreateCell(12);
                 apiStateCell.SetCellValue(address.ApiState);
-                apiStateCell.CellStyle = apiCellStyle;
+                apiStateCell.CellStyle = cellStyle;
 
                 var apiCityCell = row.CreateCell(13);
                 apiCityCell.SetCellValue(address.ApiCity);
-                apiCityCell.CellStyle = apiCellStyle;
+                apiCityCell.CellStyle = cellStyle;
                 
                 rowIndex++;
             }
@@ -228,8 +303,8 @@ namespace Geocodeonthefly.Infrastructure.Repositories
                     address.Postalcode,
                     address.State,
                     address.City,
-                    address.Lat,
-                    address.Lng));
+                    address.ApiLat,
+                    address.ApiLng));
             }
 
             File.WriteAllText(destinationPath, csv.ToString(), Encoding.Default);
