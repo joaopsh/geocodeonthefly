@@ -2,6 +2,8 @@
 {
     public class Address
     {
+        public string CustomIdentifier { get; set; }
+
         public string Country { get; set; }
 
         public string State { get; set; }
